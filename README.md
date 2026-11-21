@@ -31,3 +31,5 @@ Run from the repository root:
 ```powershell
 node set1/n2-calculator/index.js add 12 8
 ```
+
+![N2 calculator results and expected errors](set1/n2-calculator/screenshots/n2_sample_run.png)
