@@ -21,3 +21,13 @@ npm start
 Screenshot of the program output:
 
 ![N1 npm start output](set1/n1-setup/screenshots/n1_npm_start.png)
+
+### N2: Modular Calculator
+
+[Activity folder](set1/n2-calculator) — A calculator that uses separate modules for arithmetic and output formatting.
+
+Run from the repository root:
+
+```powershell
+node set1/n2-calculator/index.js add 12 8
+```
