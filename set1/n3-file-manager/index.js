@@ -14,9 +14,38 @@ function getFilePath(fileName) {
   return path.join(filesDir, fileName);
 }
 
-function showContents(filePath) {
-  const contents = fs.readFileSync(filePath, "utf8");
-  console.log(contents.trimEnd());
+function printContents(contents) {
+  process.stdout.write(contents);
+  if (!contents.endsWith("\n")) {
+    process.stdout.write("\n");
+  }
+}
+
+function listFiles() {
+  const names = fs.readdirSync(filesDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map((entry) => entry.name)
+    .sort();
+
+  if (names.length === 0) {
+    console.log("No files yet.");
+    return;
+  }
+
+  for (const name of names) {
+    const filePath = path.join(filesDir, name);
+    console.log(`\nFull path: ${filePath}`);
+    console.log(`File name: ${path.basename(filePath)}`);
+    console.log(`Extension: ${path.extname(filePath)}`);
+    console.log("Contents:");
+    printContents(fs.readFileSync(filePath, "utf8"));
+  }
+}
+
+function requireText(command, text) {
+  if (!text.trim()) {
+    throw new Error(`Usage: node index.js ${command} notes.txt "Your text"`);
+  }
 }
 
 function main() {
@@ -25,19 +54,36 @@ function main() {
 
   switch (command) {
     case "create":
-      if (!text.trim()) {
-        throw new Error('Usage: node index.js create notes.txt "Your text"');
-      }
+      requireText(command, text);
       fs.mkdirSync(filesDir, { recursive: true });
       fs.writeFileSync(getFilePath(fileName), text + "\n", { flag: "wx" });
       console.log(`Created ${fileName}.`);
       break;
-    case "read":
-      console.log(`Contents of ${path.basename(getFilePath(fileName))}:`);
-      showContents(getFilePath(fileName));
+    case "read": {
+      const filePath = getFilePath(fileName);
+      const contents = fs.readFileSync(filePath, "utf8");
+      console.log(`Contents of ${path.basename(filePath)}:`);
+      printContents(contents);
+      break;
+    }
+    case "update": {
+      requireText(command, text);
+      // Append to an existing file without creating one if it is missing.
+      const appendOnly = fs.constants.O_WRONLY | fs.constants.O_APPEND;
+      fs.appendFileSync(getFilePath(fileName), text + "\n", { flag: appendOnly });
+      console.log(`Appended text to ${fileName}.`);
+      break;
+    }
+    case "delete":
+      fs.unlinkSync(getFilePath(fileName));
+      console.log(`Deleted ${fileName}.`);
+      break;
+    case "list":
+      fs.mkdirSync(filesDir, { recursive: true });
+      listFiles();
       break;
     default:
-      throw new Error("Choose a command: create or read.");
+      throw new Error("Choose a command: create, read, update, delete, or list.");
   }
 }
 

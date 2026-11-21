@@ -33,3 +33,19 @@ node set1/n2-calculator/index.js add 12 8
 ```
 
 ![N2 calculator results and expected errors](set1/n2-calculator/screenshots/n2_sample_run.png)
+
+### N3: File Manager
+
+[Activity folder](set1/n3-file-manager) contains a command line file manager that uses Node's built-in fs and path modules.
+
+Run from the repository root:
+
+```powershell
+cd set1/n3-file-manager
+node index.js create notes.txt "First line"
+node index.js read notes.txt
+node index.js update notes.txt "Second line"
+node index.js list
+```
+
+To remove a file you no longer need, run `node index.js delete notes.txt`.
