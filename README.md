@@ -49,3 +49,5 @@ node index.js list
 ```
 
 To remove a file you no longer need, run `node index.js delete notes.txt`.
+
+![N3 creating, updating, and reading files](set1/n3-file-manager/screenshots/n3_create_read_update.png)
